@@ -48,6 +48,7 @@ describe('MeComponent', () => {
     },
     logOut: jest.fn(),
   };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],

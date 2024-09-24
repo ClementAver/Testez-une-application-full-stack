@@ -27,14 +27,19 @@ const mockSessionService = {
   },
 };
 
+const mockRouter = { navigate: jest.fn() };
+
+const formValue = {
+  email: 'john-doe@mail.me',
+  password: '********',
+};
+
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;
   let router: any;
   let sessionService: SessionService;
-
-  const mockRouter = { navigate: jest.fn() };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -68,10 +73,6 @@ describe('LoginComponent', () => {
   it('should call login and navigate on successful login', () => {
     const loginSpy = jest.spyOn(authService, 'login');
     const logInSpy = jest.spyOn(sessionService, 'logIn');
-    const formValue = {
-      email: 'john-doe@mail.me',
-      password: 'devine',
-    };
 
     component.form.setValue(formValue);
     component.submit();
@@ -84,11 +85,7 @@ describe('LoginComponent', () => {
   it('should set onError to true on login failure', () => {
     jest
       .spyOn(authService, 'login')
-      .mockReturnValue(throwError(() => new Error('test')));
-    const formValue = {
-      email: 'test@example.com',
-      password: 'password',
-    };
+      .mockReturnValue(throwError(() => new Error('error')));
 
     component.form.setValue(formValue);
     component.submit();

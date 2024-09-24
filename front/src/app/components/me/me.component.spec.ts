@@ -10,44 +10,43 @@ import { expect } from '@jest/globals';
 import { User } from 'src/app/interfaces/user.interface';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { MeComponent } from './me.component';
 import { Observable, of } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 
+const mockUserService = {
+  getById: (): Observable<User> => {
+    const user: User = {
+      id: 1,
+      email: 'john.doe@mail.me',
+      lastName: 'Doe',
+      firstName: 'John',
+      admin: true,
+      password: '********',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return of(user);
+  },
+  delete: (): Observable<any> => {
+    return of({});
+  },
+};
+
+const mockSessionService = {
+  sessionInformation: {
+    admin: true,
+    id: 1,
+  },
+  logOut: jest.fn(),
+};
+
+const mockMatSnackBar = { open: jest.fn() };
+const mockRouter = { navigate: jest.fn() };
+
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
-
-  const mockRouter = { navigate: jest.fn() };
-  const mockMatSnackBar = { open: jest.fn() };
-
-  const mockUserService = {
-    getById: (): Observable<User> => {
-      const user: User = {
-        id: 1,
-        email: 'john.doe@mail.me',
-        lastName: 'Doe',
-        firstName: 'John',
-        admin: true,
-        password: '********',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      return of(user);
-    },
-    delete: (): Observable<any> => {
-      return of({});
-    },
-  };
-
-  const mockSessionService = {
-    sessionInformation: {
-      admin: true,
-      id: 1,
-    },
-    logOut: jest.fn(),
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

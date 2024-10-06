@@ -27,7 +27,8 @@ export class LoginComponent {
     private sessionService: SessionService
   ) {}
 
-  public submit(): void { // doesn't check for validators.
+  public submit(): void {
+    // doesn't check for validators.
     const loginRequest = this.form.value as LoginRequest;
 
     this.authService.login(loginRequest).subscribe({

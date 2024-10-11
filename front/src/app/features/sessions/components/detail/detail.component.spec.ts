@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { convertToParamMap } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { jest } from '@jest/globals';
 
 const mockActivatedRoute = {
   snapshot: {

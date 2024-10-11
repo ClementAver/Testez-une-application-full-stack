@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { LoginComponent } from './login.component';
 import { Router } from '@angular/router';
 import { expect } from '@jest/globals';
+import { jest } from '@jest/globals';
 
 class MockAuthService {
   login() {

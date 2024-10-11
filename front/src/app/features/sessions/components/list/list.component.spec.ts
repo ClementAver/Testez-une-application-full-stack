@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 import { SessionApiService } from '../../services/session-api.service';
+import { jest } from '@jest/globals';
 
 import { ListComponent } from './list.component';
 

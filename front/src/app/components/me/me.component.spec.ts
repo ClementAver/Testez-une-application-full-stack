@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MeComponent } from './me.component';
 import { Observable, of } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
+import { jest } from '@jest/globals';
 
 const mockUserService = {
   getById: (): Observable<User> => {

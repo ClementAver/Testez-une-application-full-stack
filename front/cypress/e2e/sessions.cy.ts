@@ -50,8 +50,6 @@ describe('Given a logged user on the sessions page,', () => {
       updatedAt: '2024-09-25T13:26:04',
     });
 
-    cy.intercept('DELETE', '/api/session/1');
-
     cy.intercept('GET', '/api/teacher', [
       {
         id: 1,
@@ -102,85 +100,91 @@ describe('Given a logged user on the sessions page,', () => {
       cy.contains('Session de découverte').should('be.visible');
     });
 
-    it('Then he should be able to see details about one session.', () => {
-      cy.get('span').contains('Detail').click();
-      cy.contains('Create at:').should('be.visible');
-    });
-
-    it('Then he should be able to participate to one session.', () => {
-      cy.intercept('POST', '/api/session/1/participate/1', {});
-      cy.intercept('GET', '/api/session/1', {
-        id: 1,
-        name: 'Session de découverte',
-        date: '2024-09-12T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'Portes ouvertes toute la journée.',
-        users: [],
-        createdAt: '2024-09-25T13:26:04',
-        updatedAt: '2024-09-25T13:26:04',
+    describe("When he clicks on a session 'Detail' button,", () => {
+      it('Then he should be able to see details about one session.', () => {
+        cy.get('span').contains('Detail').click();
+        cy.contains('Create at:').should('be.visible');
       });
 
-      cy.get('span').contains('Detail').click();
+      describe("When he clicks on a session 'Participate' button,", () => {
+        it('Then he should be able to participate to one session.', () => {
+          cy.intercept('POST', '/api/session/1/participate/1', {});
+          cy.intercept('GET', '/api/session/1', {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          });
 
-      cy.intercept('GET', '/api/session/1', {
-        id: 1,
-        name: 'Session de découverte',
-        date: '2024-09-12T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'Portes ouvertes toute la journée.',
-        users: [1],
-        createdAt: '2024-09-25T13:26:04',
-        updatedAt: '2024-09-25T13:26:04',
+          cy.get('span').contains('Detail').click();
+
+          cy.intercept('GET', '/api/session/1', {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [1],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          });
+
+          cy.get('span').contains('Participate').click();
+          cy.contains('1 attendees').should('be.visible');
+        });
       });
 
-      cy.get('span').contains('Participate').click();
-      cy.contains('1 attendees').should('be.visible');
-    });
+      describe("When he clicks on a session 'Do not participate' button,", () => {
+        it('Then he should be able to unparticipate from one session.', () => {
+          cy.intercept('POST', '/api/session/1/participate/1', {});
+          cy.intercept('DELETE', '/api/session/1/participate/1', {});
 
-    it('Then he should be able to unparticipate from one session.', () => {
-      cy.intercept('POST', '/api/session/1/participate/1', {});
-      cy.intercept('DELETE', '/api/session/1/participate/1', {});
+          cy.intercept('GET', '/api/session/1', {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          });
 
-      cy.intercept('GET', '/api/session/1', {
-        id: 1,
-        name: 'Session de découverte',
-        date: '2024-09-12T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'Portes ouvertes toute la journée.',
-        users: [],
-        createdAt: '2024-09-25T13:26:04',
-        updatedAt: '2024-09-25T13:26:04',
+          cy.get('span').contains('Detail').click();
+
+          cy.intercept('GET', '/api/session/1', {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [1],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          });
+
+          cy.get('span').contains('Participate').click();
+          cy.contains('1 attendees').should('be.visible');
+
+          cy.intercept('GET', '/api/session/1', {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          });
+
+          cy.get('span').contains('Do not participate').click();
+          cy.contains('0 attendees').should('be.visible');
+        });
       });
-
-      cy.get('span').contains('Detail').click();
-
-      cy.intercept('GET', '/api/session/1', {
-        id: 1,
-        name: 'Session de découverte',
-        date: '2024-09-12T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'Portes ouvertes toute la journée.',
-        users: [1],
-        createdAt: '2024-09-25T13:26:04',
-        updatedAt: '2024-09-25T13:26:04',
-      });
-
-      cy.get('span').contains('Participate').click();
-      cy.contains('1 attendees').should('be.visible');
-
-      cy.intercept('GET', '/api/session/1', {
-        id: 1,
-        name: 'Session de découverte',
-        date: '2024-09-12T00:00:00.000+00:00',
-        teacher_id: 1,
-        description: 'Portes ouvertes toute la journée.',
-        users: [],
-        createdAt: '2024-09-25T13:26:04',
-        updatedAt: '2024-09-25T13:26:04',
-      });
-
-      cy.get('span').contains('Do not participate').click();
-      cy.contains('0 attendees').should('be.visible');
     });
   });
 
@@ -208,102 +212,109 @@ describe('Given a logged user on the sessions page,', () => {
       cy.contains('Session de découverte').should('be.visible');
     });
 
-    it('Then he should be able to create a new session.', () => {
-      cy.intercept('GET', '/api/session', [
-        {
-          id: 1,
-          name: 'Session de découverte',
-          date: '2024-09-12T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: 'Portes ouvertes toute la journée.',
-          users: [],
-          createdAt: '2024-09-25T13:26:04',
-          updatedAt: '2024-09-25T13:26:04',
-        },
-        {
-          id: 2,
-          name: 'Stage postnatal',
-          date: '2024-10-10T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: 'Basé sur des postures douces.',
-          users: [],
-          createdAt: '2024-10-05T07:46:25.3914004',
-          updatedAt: '2024-10-05T07:46:25.4262755',
-        },
-      ]).as('session');
+    describe("When he clicks the 'Create' button,", () => {
+      it('Then he should be able to create a new session.', () => {
+        cy.intercept('GET', '/api/session', [
+          {
+            id: 1,
+            name: 'Session de découverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Portes ouvertes toute la journée.',
+            users: [],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          },
+          {
+            id: 2,
+            name: 'Stage postnatal',
+            date: '2024-10-10T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Basé sur des postures douces.',
+            users: [],
+            createdAt: '2024-10-05T07:46:25.3914004',
+            updatedAt: '2024-10-05T07:46:25.4262755',
+          },
+        ]).as('session');
 
-      cy.get('span').contains('Create').click();
-      cy.get('input[formControlName=name]').type('Stage postnatal');
-      const today = new Date().toISOString().split('T')[0];
-      cy.get('input[formControlName=date]').type(today);
-      cy.get('mat-select[formControlName=teacher_id]').click();
-      cy.get('mat-option').first().click();
-      cy.get('textarea[formControlName=description]').type(
-        'Basé sur des postures douces.'
-      );
-      cy.get('span').contains('Save').click();
+        cy.get('span').contains('Create').click();
+        cy.get('input[formControlName=name]').type('Stage postnatal');
+        const today = new Date().toISOString().split('T')[0];
+        cy.get('input[formControlName=date]').type(today);
+        cy.get('mat-select[formControlName=teacher_id]').click();
+        cy.get('mat-option').first().click();
+        cy.get('textarea[formControlName=description]').type(
+          'Basé sur des postures douces.'
+        );
+        cy.get('span').contains('Save').click();
 
-      cy.contains('Stage postnatal').should('be.visible');
+        cy.contains('Stage postnatal').should('be.visible');
+      });
     });
 
-    it('Then he should be able to edit a session.', () => {
-      cy.intercept('GET', '/api/session', [
-        {
-          id: 1,
-          name: 'Session de redécouverte',
-          date: '2024-09-12T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: "Portes ouvertes l'après-midi.",
-          users: [],
-          createdAt: '2024-09-25T13:26:04',
-          updatedAt: '2024-09-25T13:26:04',
-        },
-        {
-          id: 2,
-          name: 'Stage postnatal',
-          date: '2024-10-10T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: 'Basé sur des postures douces.',
-          users: [],
-          createdAt: '2024-10-05T07:46:25.3914004',
-          updatedAt: '2024-10-05T07:46:25.4262755',
-        },
-      ]).as('session');
+    describe("When he clicks the 'Edit' button,", () => {
+      it('Then he should be able to edit a session.', () => {
+        cy.intercept('GET', '/api/session', [
+          {
+            id: 1,
+            name: 'Session de redécouverte',
+            date: '2024-09-12T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: "Portes ouvertes l'après-midi.",
+            users: [],
+            createdAt: '2024-09-25T13:26:04',
+            updatedAt: '2024-09-25T13:26:04',
+          },
+          {
+            id: 2,
+            name: 'Stage postnatal',
+            date: '2024-10-10T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Basé sur des postures douces.',
+            users: [],
+            createdAt: '2024-10-05T07:46:25.3914004',
+            updatedAt: '2024-10-05T07:46:25.4262755',
+          },
+        ]).as('session');
 
-      cy.get('span').contains('Edit').click();
-      cy.get('input[formControlName=name]').type(' updated');
-      const today = new Date().toISOString().split('T')[0];
-      cy.get('input[formControlName=date]').type(today);
-      cy.get('mat-select[formControlName=teacher_id]').click();
-      cy.get('mat-option').first().click();
-      cy.get('textarea[formControlName=description]').type(' updated.');
-      cy.get('span').contains('Save').click();
+        cy.get('span').contains('Edit').click();
+        cy.get('input[formControlName=name]').type(' updated');
+        const today = new Date().toISOString().split('T')[0];
+        cy.get('input[formControlName=date]').type(today);
+        cy.get('mat-select[formControlName=teacher_id]').click();
+        cy.get('mat-option').first().click();
+        cy.get('textarea[formControlName=description]').type(' updated.');
+        cy.get('span').contains('Save').click();
 
-      cy.contains('Session de redécouverte').should('be.visible');
+        cy.contains('Session de redécouverte').should('be.visible');
+      });
     });
 
-    it('Then he should be able to see details about one session.', () => {
-      cy.get('span').contains('Detail').click();
-      cy.contains('Create at:').should('be.visible');
-    });
+    describe("When he clicks on a session 'Detail' button,", () => {
+      it('Then he should be able to see details about one session.', () => {
+        cy.get('span').contains('Detail').click();
+        cy.contains('Create at:').should('be.visible');
+      });
 
-    it('Then he should be able to delete a session.', () => {
-      cy.intercept('GET', '/api/session', [
-        {
-          id: 2,
-          name: 'Stage postnatal',
-          date: '2024-10-10T00:00:00.000+00:00',
-          teacher_id: 1,
-          description: 'Basé sur des postures douces.',
-          users: [],
-          createdAt: '2024-10-05T07:46:25.3914004',
-          updatedAt: '2024-10-05T07:46:25.4262755',
-        },
-      ]).as('session');
+      it('Then he should be able to delete a session.', () => {
+        cy.intercept('DELETE', '/api/session/1', {});
+        cy.intercept('GET', '/api/session', [
+          {
+            id: 2,
+            name: 'Stage postnatal',
+            date: '2024-10-10T00:00:00.000+00:00',
+            teacher_id: 1,
+            description: 'Basé sur des postures douces.',
+            users: [],
+            createdAt: '2024-10-05T07:46:25.3914004',
+            updatedAt: '2024-10-05T07:46:25.4262755',
+          },
+        ]).as('session');
 
-      cy.get('span').contains('Detail').click();
-      cy.get('span').contains('Delete').click();
-      cy.contains('Session de découverte').should('not.exist');
+        cy.get('span').contains('Detail').click();
+        cy.get('span').contains('Delete').click();
+        cy.contains('Session de découverte').should('not.exist');
+      });
     });
   });
 });

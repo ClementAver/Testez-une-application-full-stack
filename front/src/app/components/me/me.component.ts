@@ -39,5 +39,4 @@ export class MeComponent implements OnInit {
         this.router.navigate(['/']);
       })
   }
-
 }

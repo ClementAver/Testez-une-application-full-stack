@@ -53,6 +53,17 @@ public class TeacherControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.firstName").value("Margot"))
                 .andExpect(jsonPath("$.lastName").value("DELAHAYE"));
+
+
+        mockMvc.perform(get("/api/teacher/3")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(get("/api/teacher/a")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -61,13 +72,14 @@ public class TeacherControllerTest {
 
         mockMvc.perform(get("/api/teacher")
                         .header("Authorization", "Bearer " + token)
+                        .characterEncoding("utf-8")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].firstName").value("Margot"))
                 .andExpect(jsonPath("$[0].lastName").value("DELAHAYE"))
                 .andExpect(jsonPath("$[1].id").value(2L))
-                .andExpect(jsonPath("$[1].firstName").value("Hélène"))
+                .andExpect(jsonPath("$[1].firstName").value("Helene"))
                 .andExpect(jsonPath("$[1].lastName").value("THIERCELIN"));
     }
 }

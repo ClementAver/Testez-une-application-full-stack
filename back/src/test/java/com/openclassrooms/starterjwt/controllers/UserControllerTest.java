@@ -24,10 +24,10 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String obtainAccessToken() throws Exception {
+    private String obtainAccessToken(String email, String password) throws Exception {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("yoga@studio.com");
-        loginRequest.setPassword("test!1234");
+        loginRequest.setEmail(email);
+        loginRequest.setPassword(password);
 
         String loginRequestJson = objectMapper.writeValueAsString(loginRequest);
 
@@ -43,7 +43,7 @@ public class UserControllerTest {
 
     @Test
     public void testFindById() throws Exception {
-        String token = obtainAccessToken();
+        String token = obtainAccessToken("yoga@studio.com", "test!1234");
 
         mockMvc.perform(get("/api/user/1")
                         .header("Authorization", "Bearer " + token)
@@ -52,16 +52,43 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.email").value("yoga@studio.com"))
                 .andExpect(jsonPath("$.admin").value(true));
+
+        mockMvc.perform(get("/api/user/3")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(get("/api/user/a")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testDeleteUser() throws Exception {
-        String token = obtainAccessToken();
+        String token = obtainAccessToken("yoga@studio.com", "test!1234");
+
+        mockMvc.perform(delete("/api/user/2")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(delete("/api/user/1")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        token = obtainAccessToken("jean-dupont@mail.me", "test!1234");
+
+        mockMvc.perform(delete("/api/user/3")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(delete("/api/user/a")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
 }

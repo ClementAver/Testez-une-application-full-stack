@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.services;
 
 import com.openclassrooms.starterjwt.exception.BadRequestException;
+import com.openclassrooms.starterjwt.exception.NotFoundException;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -44,8 +46,8 @@ public class SessionServiceTest {
         user = new User(1L, "john.doe@mail.me", "Doe", "John", "******", false, LocalDateTime.now(), LocalDateTime.now());
         teacher = new Teacher(2L, "White", "Walter", LocalDateTime.now(), LocalDateTime.now());
         sessions = Arrays.asList(
-                new Session(1L, "Session 1", new Date(), "Description 1", teacher, new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
-                new Session(2L, "Session 2", new Date(), "Description 2", teacher, Arrays.asList(user), LocalDateTime.now(), LocalDateTime.now())
+                new Session(1L, "Stage postnatal", new Date(), "Basé sur...", teacher, new ArrayList<>(), LocalDateTime.now(), LocalDateTime.now()),
+                new Session(2L, "Après-midi découverte", new Date(), "Venez découvrir...", teacher, Arrays.asList(user), LocalDateTime.now(), LocalDateTime.now())
         );
     }
 
@@ -102,14 +104,14 @@ public class SessionServiceTest {
     public void testUpdateSession() {
         Long sessionId = 1L;
         Session session = sessions.get(0);
-        session.setName("Updated session 1");
+        session.setName("Stage postnatal maj.");
         when(sessionRepository.save(session)).thenReturn(session);
 
         Session updatedSession = sessionService.update(sessionId, session);
 
         verify(sessionRepository, times(1)).save(session);
         assertNotNull(updatedSession);
-        assertEquals(updatedSession.getName(), "Updated session 1");
+        assertEquals(updatedSession.getName(), "Stage postnatal maj.");
     }
 
     @Test
@@ -121,9 +123,19 @@ public class SessionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         sessionService.participate(sessionId, userId);
-
         verify(sessionRepository, times(1)).save(session);
         assertTrue(session.getUsers().contains(user));
+
+        // no session
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> sessionService.participate(sessionId, userId));
+
+        // no user
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> sessionService.participate(sessionId, userId));
     }
 
     @Test
@@ -148,6 +160,10 @@ public class SessionServiceTest {
 
         verify(sessionRepository, times(1)).save(session);
         assertFalse(session.getUsers().contains(user));
+
+        // no session
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () ->  sessionService.noLongerParticipate(sessionId, userId));
     }
 
     @Test

@@ -82,6 +82,12 @@ describe('MeComponent', () => {
     expect(component.user?.email).toBe('john.doe@mail.me');
   });
 
+  it('should go back', () => {
+    const backSpy = jest.spyOn(window.history, 'back');
+    component.back();
+    expect(backSpy).toHaveBeenCalled();
+  });
+
   it('should call delete and navigate away', () => {
     const deleteSpy = jest.spyOn(mockUserService, 'delete');
     const navigateSpy = jest.spyOn(mockRouter, 'navigate');

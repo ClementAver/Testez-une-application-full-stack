@@ -6,11 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Git clone:
 
-> git clone https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing
-
-Go inside folder:
-
-> cd yoga
+> git clone git@github.com:ClementAver/Testez-une-application-full-stack.git
 
 Install dependencies:
 
@@ -19,31 +15,6 @@ Install dependencies:
 Launch Front-end:
 
 > npm run start;
-
-
-## Ressources
-
-### Mockoon env 
-
-### Postman collection
-
-For Postman import the collection
-
-> ressources/postman/yoga.postman_collection.json 
-
-by following the documentation: 
-
-https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
-
-
-### MySQL
-
-SQL script for creating the schema is available `ressources/sql/script.sql`
-
-By default the admin account is:
-- login: yoga@studio.com
-- password: test!1234
-
 
 ### Test
 
@@ -67,6 +38,30 @@ Launching test:
 
 > npm run test
 
+With coverage report:
+
+> npx jest --coverage
+
 for following change:
 
 > npm run test:watch
+
+## Ressources
+
+### Postman collection
+
+For Postman import the collection
+
+> ressources/postman/yoga.postman_collection.json 
+
+by following the documentation: 
+
+https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman
+
+### MySQL
+
+SQL script for creating the schema is available `ressources/sql/script.sql`
+
+By default the admin account is:
+- login: yoga@studio.com
+- password: test!1234

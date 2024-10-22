@@ -311,6 +311,17 @@ describe('Given a logged user on the sessions page,', () => {
           },
         ]).as('session');
 
+        cy.intercept('GET', '/api/session/2', {
+          id: 2,
+          name: 'Stage postnatal',
+          date: '2024-10-10T00:00:00.000+00:00',
+          teacher_id: 1,
+          description: 'Basé sur des postures douces.',
+          users: [],
+          createdAt: '2024-10-05T07:46:25.3914004',
+          updatedAt: '2024-10-05T07:46:25.4262755',
+        });
+
         cy.get('span').contains('Detail').click();
         cy.get('span').contains('Delete').click();
         cy.contains('Session de découverte').should('not.exist');

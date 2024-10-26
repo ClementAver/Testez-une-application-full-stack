@@ -15,6 +15,10 @@ import { Observable, of } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { jest } from '@jest/globals';
 
+/*
+ * Here are mocked services used in tests.
+ * of() is used to return an observable with the given value.
+ */
 const mockUserService = {
   getById: (): Observable<User> => {
     const user: User = {
@@ -42,13 +46,21 @@ const mockSessionService = {
   logOut: jest.fn(),
 };
 
+// Other project dependencies (here a component called by 'me' and the router).
 const mockMatSnackBar = { open: jest.fn() };
 const mockRouter = { navigate: jest.fn() };
 
+/*
+ * Testbed configuration to create the component and injecting its dependencies.
+ * The mocked services are assigned their original targets to proxy in the 'providers' section.
+ */
 describe('MeComponent', () => {
+  // The component tested.
   let component: MeComponent;
+  // Initialisazion of the fixture instance (fixture = 'Données de test').
   let fixture: ComponentFixture<MeComponent>;
 
+  // Before each test, the component is created and its dependencies are injected.
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
@@ -68,8 +80,11 @@ describe('MeComponent', () => {
       ],
     }).compileComponents();
 
+    // Create the component and its fixture.
     fixture = TestBed.createComponent(MeComponent);
+    // Get the component instance.
     component = fixture.componentInstance;
+    // Trigger initial data binding and lifecycle hooks (ngOnInit here).
     fixture.detectChanges();
   });
 
@@ -77,6 +92,7 @@ describe('MeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // <-> 
   it('should load user', () => {
     expect(component.user).toBeTruthy();
     expect(component.user?.email).toBe('john.doe@mail.me');
@@ -88,6 +104,7 @@ describe('MeComponent', () => {
     expect(backSpy).toHaveBeenCalled();
   });
 
+  // <-> 
   it('should call delete and navigate away', () => {
     const deleteSpy = jest.spyOn(mockUserService, 'delete');
     const navigateSpy = jest.spyOn(mockRouter, 'navigate');

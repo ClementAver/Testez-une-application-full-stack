@@ -44,11 +44,11 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      providers: [
-        { provide: AuthService, useClass: MockAuthService },
-        { provide: SessionService, useValue: mockSessionService },
-        { provide: Router, useValue: mockRouter },
-      ],
+
+      /*
+       * useClass : provide an alternative class to be instanciated in the place of the original one.
+       * useValue : only return a mocked value.
+       */
       imports: [
         BrowserAnimationsModule,
         MatCardModule,
@@ -57,9 +57,20 @@ describe('LoginComponent', () => {
         MatInputModule,
         ReactiveFormsModule,
       ],
+      providers: [
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: SessionService, useValue: mockSessionService },
+        { provide: Router, useValue: mockRouter },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+
+    /*
+     * Here, we need to 'inject' the original services.
+     * This is so that we can interact (spy) directly with their methods and not just the mocked ones.
+     */
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
     sessionService = TestBed.inject(SessionService);
@@ -69,6 +80,7 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // <->
   it('should call login and navigate on successful login', () => {
     const loginSpy = jest.spyOn(authService, 'login');
     const logInSpy = jest.spyOn(sessionService, 'logIn');
@@ -81,6 +93,7 @@ describe('LoginComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/sessions']);
   });
 
+  // <-> 
   it('should set onError to true on login failure', () => {
     jest
       .spyOn(authService, 'login')

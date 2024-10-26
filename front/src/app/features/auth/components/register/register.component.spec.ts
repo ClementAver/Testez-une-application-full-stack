@@ -37,10 +37,6 @@ describe('RegisterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [RegisterComponent],
-      providers: [
-        { provide: AuthService, useClass: MockAuthService },
-        { provide: Router, useValue: mockRouter },
-      ],
       imports: [
         BrowserAnimationsModule,
         HttpClientModule,
@@ -50,19 +46,23 @@ describe('RegisterComponent', () => {
         MatIconModule,
         MatInputModule,
       ],
+      providers: [
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: Router, useValue: mockRouter },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // <-> 
   it('should call register and navigate on successful registration', () => {
     const registerSpy = jest.spyOn(authService, 'register');
 
@@ -73,6 +73,7 @@ describe('RegisterComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
+  // <-> 
   it('should set onError to true on registration failure', () => {
     jest
       .spyOn(authService, 'register')

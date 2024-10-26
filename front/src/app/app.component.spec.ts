@@ -17,8 +17,8 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientModule, MatToolbarModule],
       declarations: [AppComponent],
+      imports: [RouterTestingModule, HttpClientModule, MatToolbarModule],
       providers: [SessionService],
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
@@ -31,6 +31,7 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // <->
   it('should call sessionService.logOut and navigate to home on logout', () => {
     const logOutSpy = jest.spyOn(sessionService, 'logOut');
     const navigateSpy = jest.spyOn(router, 'navigate');
@@ -41,6 +42,7 @@ describe('AppComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['']);
   });
 
+  // <->
   it('should return the logged-in status from sessionService', () => {
     const isLoggedSpy = jest
       .spyOn(sessionService, '$isLogged')

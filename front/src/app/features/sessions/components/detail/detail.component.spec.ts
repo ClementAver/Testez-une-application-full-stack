@@ -63,14 +63,19 @@ const mockMatSnackBar = { open: jest.fn() };
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let sessionService: SessionService;
   let sessionApiService: SessionApiService;
-  let teacherService: TeacherService;
   let router: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DetailComponent],
+      imports: [
+        HttpClientModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatCardModule,
+      ],
       providers: [
         { provide: SessionService, useValue: mockSessionService },
         { provide: SessionApiService, useValue: mockSessionApiService },
@@ -79,18 +84,9 @@ describe('DetailComponent', () => {
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: MatSnackBar, useValue: mockMatSnackBar },
       ],
-      imports: [
-        HttpClientModule,
-        MatSnackBarModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatCardModule,
-      ],
     }).compileComponents();
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
-    teacherService = TestBed.inject(TeacherService);
-    sessionService = TestBed.inject(SessionService);
     sessionApiService = TestBed.inject(SessionApiService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
@@ -100,8 +96,8 @@ describe('DetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // <-> 
   it('should fetch session on init', () => {
-    component.ngOnInit();
     expect(sessionApiService.detail).toHaveBeenCalledWith(component.sessionId);
     expect(component.session).toBeDefined();
     expect(component.isParticipate).toBe(true);
@@ -113,6 +109,7 @@ describe('DetailComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  // <-> 
   it('should delete session', () => {
     component.delete();
     expect(sessionApiService.delete).toHaveBeenCalledWith(component.sessionId);
@@ -124,6 +121,7 @@ describe('DetailComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['sessions']);
   });
 
+  // <-> 
   it('should participate in session', () => {
     component.participate();
     expect(sessionApiService.participate).toHaveBeenCalledWith(
@@ -132,6 +130,7 @@ describe('DetailComponent', () => {
     );
   });
 
+  // <-> 
   it('should unParticipate from session', () => {
     component.unParticipate();
     expect(sessionApiService.unParticipate).toHaveBeenCalledWith(

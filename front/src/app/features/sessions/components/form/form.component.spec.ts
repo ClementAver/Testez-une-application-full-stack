@@ -110,26 +110,28 @@ describe('FormComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // <->
   it('should redirect if user is not admin', () => {
     sessionService.sessionInformation!.admin = false;
     component.ngOnInit();
     expect(router.navigate).toHaveBeenCalledWith(['/sessions']);
   });
 
+  // <->
   it('should initialize form for update', () => {
-    component.ngOnInit();
     expect(component.onUpdate).toBe(true);
     expect(sessionApiService.detail).toHaveBeenCalledWith('1');
+    expect(component.sessionForm).toBeDefined();
   });
 
   it('should initialize form for create', () => {
     mockRouter.url = '/sessions/create';
-    component.ngOnInit();
     expect(component.sessionForm).toBeDefined();
     // Reset (before each seamed too much for one test.)
     mockRouter.url = '/sessions/update/1';
   });
 
+  // <->
   it('should submit create form', () => {
     component.onUpdate = false;
     component.sessionForm?.setValue(createdSession);
@@ -143,6 +145,7 @@ describe('FormComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['sessions']);
   });
 
+  // <->
   it('should submit update form', () => {
     component.onUpdate = true;
     component.sessionForm?.setValue(updatedSession);

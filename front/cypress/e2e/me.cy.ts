@@ -2,6 +2,7 @@
 
 describe('Given a logged user on the homepage,', () => {
   beforeEach(() => {
+    // Responses are mocked to simulate the API calls.
     cy.intercept('POST', '/api/auth/login', (req) => {
       if (req.body.email === 'yoga@studio.com') {
         req.reply({
@@ -80,6 +81,7 @@ describe('Given a logged user on the homepage,', () => {
 
       cy.get('span').contains('Account').click();
 
+      // Cypress will wait for the named request to complete before continuing.
       cy.wait('@getAdmin').then(() => {
         cy.contains('Name: firstName LASTNAME').should('be.visible');
         cy.contains('Email: yoga@studio.com').should('be.visible');
@@ -128,7 +130,7 @@ describe('Given a logged user on the homepage,', () => {
               cy.contains('Your account has been deleted !').should(
                 'be.visible'
               );
-              cy.url().should('eq', (Cypress.config().baseUrl + '/'));
+              cy.url().should('eq', Cypress.config().baseUrl + '/');
             });
           });
         });

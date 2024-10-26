@@ -36,17 +36,18 @@ describe('ListComponent', () => {
 
     fixture = TestBed.createComponent(ListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // <-> 
   it('should have sessions$ observable defined', () => {
     expect(component.sessions$).toBeDefined();
   });
 
+  // <->
   it('should return correct session information from user getter', () => {
     expect(component.user).toEqual(mockSessionService.sessionInformation);
   });

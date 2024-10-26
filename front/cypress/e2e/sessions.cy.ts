@@ -109,16 +109,6 @@ describe('Given a logged user on the sessions page,', () => {
       describe("When he clicks on a session 'Participate' button,", () => {
         it('Then he should be able to participate to one session.', () => {
           cy.intercept('POST', '/api/session/1/participate/1', {});
-          cy.intercept('GET', '/api/session/1', {
-            id: 1,
-            name: 'Session de découverte',
-            date: '2024-09-12T00:00:00.000+00:00',
-            teacher_id: 1,
-            description: 'Portes ouvertes toute la journée.',
-            users: [],
-            createdAt: '2024-09-25T13:26:04',
-            updatedAt: '2024-09-25T13:26:04',
-          });
 
           cy.get('span').contains('Detail').click();
 
@@ -142,17 +132,6 @@ describe('Given a logged user on the sessions page,', () => {
         it('Then he should be able to unparticipate from one session.', () => {
           cy.intercept('POST', '/api/session/1/participate/1', {});
           cy.intercept('DELETE', '/api/session/1/participate/1', {});
-
-          cy.intercept('GET', '/api/session/1', {
-            id: 1,
-            name: 'Session de découverte',
-            date: '2024-09-12T00:00:00.000+00:00',
-            teacher_id: 1,
-            description: 'Portes ouvertes toute la journée.',
-            users: [],
-            createdAt: '2024-09-25T13:26:04',
-            updatedAt: '2024-09-25T13:26:04',
-          });
 
           cy.get('span').contains('Detail').click();
 
@@ -309,7 +288,7 @@ describe('Given a logged user on the sessions page,', () => {
             createdAt: '2024-10-05T07:46:25.3914004',
             updatedAt: '2024-10-05T07:46:25.4262755',
           },
-        ]).as('session');
+        ]);
 
         cy.intercept('GET', '/api/session/2', {
           id: 2,
